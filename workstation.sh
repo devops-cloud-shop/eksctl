@@ -27,3 +27,22 @@ sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
 sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
 
 curl -sS https://webinstall.dev/k9s | bash
+
+#creating cluster
+mkdir -p /opt/eks
+
+cat >/opt/eks/cluster.yaml <<'EOC'
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+    name: roboshop-dev
+    region: us-east-1
+managedNodeGroups:
+  - name: roboshop-dev
+    instanceTypes: ["t3.small", "c3.large","c4.large","c5.large"]
+    desiredCapacity: 3
+    spot: true
+EOC
+
+eksctl create cluster -f /opt/eks/cluster.yaml
